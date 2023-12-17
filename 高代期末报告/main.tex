@@ -1,0 +1,525 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{CQUReport}
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+\thispagestyle{empty} % 首页不显示页码
+
+
+
+\newpage
+%%------------------摘要-------------%%
+\begin{abstract}
+
+本文抛弃传统线性代数中线性空间八条公理。采用抽象代数的思想，从集合论开始，经过群论，自底向上构建体系，得到线性空间的定义。再证明线性空间满足那八条性质。
+
+按照定义顺序，主要包括：集合，映射，笛卡尔积，运算，代数系统，群，阿贝尔群，环，域，线性空间。
+
+\end{abstract}
+
+\vspace{1cm}
+
+%%--------------------------目录页------------------------%%
+% \newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%可选择这里也放一个标题
+\begin{center}
+   \title{ \Huge \textbf{{从集合论到线性空间}}}
+\end{center}
+
+\section{前言说明}
+本文章使用 overleaf编写，借用了上交的\LaTeX 模板。除模板外的所有内容均为本人编写，也算是作者本人的对\LaTeX 书写论文的练习和熟悉。
+
+作者本人仅仅为物理专业的普通大二学生，数学爱好者，非数学专业。文中难免出现错误和不严谨之处，忘多多包涵，有问题也欢迎批评指正。
+
+本文并非是一篇论文，只是一次普通的期末报告。不会严格按照论文的格式书写。而是比较注重展示数学之美以及自认为的严谨性（所以会把参考文献写在文中，方便追根溯源）。
+
+本文的写作主要参考《离散数学》，《量子计算：一种一种应用方法》，蓝以中的《高等代数》，丘维声的《高等代数》。
+
+\section{集合论}
+
+无论是高中还是大学，数学的第一门课几乎都是从集合开始的。有趣的是，由于罗素悖论的存在，对于集合的定义似乎并不完备，当然这并不是这篇文章想要讨论的。这里使用最传统的表述：
+
+\tbox{一个集合是具有某种共同性质的东西组成的一个整体。}
+
+\subsection{函数和映射}
+这里的定义参考了丘维声的《高等代数》，并使用自己的语言进行简写。可能不够严谨。
+\begin{Definition}
+$f$是集合$S$到集合$S'$的一个映射
+    $$f:S\rightarrow S'\Longleftrightarrow \forall a\in S , \exists \text{唯一} b\in S' ,f(a)=b
+    $$
+\end{Definition}
+
+\tbox{在线征集“存在唯一”的符号表达（）}
+
+在传统意义上，当$S$和$S'$为数域时，我们称$f$为函数。
+
+在《离散数学》的教材中，并不区分函数和映射（想来是因为计算机函数往往非常抽象，不仅和数域无关，甚至不是一个映射），秉承程序员的自我修养，本文把函数和映射统称映射。
+
+关于映射，有一些基本的定义。
+\begin{Definition}
+映射$f$是单射，当且仅当
+    $$\forall x_1,x_2\in S,x_1\ne x_2\Longleftrightarrow f\left( x_1 \right) \ne f\left( x_2 \right) $$
+\end{Definition}
+
+\begin{Definition}
+映射$f$是满射，当且仅当
+    $$\forall y\in S',\exists x \in S, y=f(x) $$
+\end{Definition}
+
+\begin{Definition}
+映射$f$是双射，当且仅当$f$是满射又是单射
+\end{Definition}
+
+% \begin{Definition}
+% 映射$f$是可逆的，当且仅当$f$是双射 %remake
+% \end{Definition}
+
+\subsection{笛卡尔积}
+
+\begin{Definition}
+笛卡儿积$A\times B$满足
+$$
+A\neq \oslash ,B\neq \oslash, A\times B:={(a,b)|a\in A,b\in B}.
+$$
+\end{Definition}
+
+特别的
+
+\begin{Definition}
+$$    \begin{cases}
+        A\times A :=A^2.\\
+        A\times A^k :=A^{k+1}, k\in \mathbb{N}
+    \end{cases}$$
+
+\end{Definition}
+这是一个递归定义，事实上，若$A$为数域，就可以定义传统的向量空间，但这并非本文想要讨论的。
+
+\subsection{运算}
+这里参考蓝以中的《高等代数》和《离散数学》，并进行改写。
+
+\begin{Definition}
+映射$f:A^n\rightarrow B$ 称为集合A上的一个n元运算
+\end{Definition}
+
+\begin{Definition}
+映射$f:A\times A\rightarrow A$ 称为集合A内的一个代数运算
+\end{Definition}
+
+注意到，在后一个定义中，$f$是二元运算，且满足封闭性。
+
+事实上蓝以中的教材中只给出了“代数运算”的定义，对于“运算”的定义来自《离散数学》。
+
+接下来对代数运算作进一步讨论
+
+\subsubsection{代数运算}\label{daishu}
+设$*$是集合$R$内的一个代数运算,
+
+
+\begin{Definition}
+    若$\forall x,y \in R,x*y=y*x$称$*$满足交换律。
+\end{Definition}
+
+\begin{Definition}
+    若$\forall x,y,z \in R,(x*y)*z=x*(y*z)$称$*$满足结合律。
+\end{Definition}
+    
+
+\begin{Definition}
+    若$\exists x_0 \in R,\forall x \in R,x_0*x=x_0$称$x_0$为零元，记为$0$
+\end{Definition}
+
+
+\begin{Definition}
+    若$\exists x_1 \in R,\forall x \in R,x_1*x=x$称$x_1$为幺元（或单位元），记为$1$
+\end{Definition}
+
+
+\begin{Definition}
+  若$\exists x_1，x_2 \in R,x_1*x_2=1$称$x_1,x_2$互为逆元，$x_1,x_2$的逆元分别记为$x_2^{-1},x_1^{-1}$  
+\end{Definition}
+
+
+\tbox{事实上，这里的集合$R$可以看作实数集$\mathbb{R}$,运算$*$可以看作实数的乘法$\times$，此时上述五条均满足}
+
+其实更严谨的定义需要分左右讨论，即左零元、右零元，左幺元、右幺元，左逆元、右逆元。但可以证明其唯一性，故上述定义亦完备。
+
+
+
+\section{群论}
+
+以下论述主要参考于本人辅修计算机科学与技术专业时学的《离散数学》，教材作者是左孝凌、李为鉴、刘永才，1982年9月由上海科学技术文献出版社出版。我对定义使用当且仅当(iff)重新表述，从代数系统开始，逐渐添加限制条件，得到阿贝尔群，再借此得到环和域的定义，只认为颇具数学之美。有趣的事，在查阅资料的过程中，发现这些东西都来自于数学系的《抽象代数》，虽没学过，但看名字就知道不会简单，每念及之，无不佩服于数学的强大和泛用性。
+
+\subsection{代数系统和群}
+
+代数系统
+\begin{Definition}
+
+    一个非空集合A连同若干定义在A上的运算$f_1,f_2,\cdots ,f_k$所组成的系统，称为代数系统，记作$\left< A,f_1,f_2,\cdots ,f_k \right>  $
+\end{Definition}
+
+\tbox{值得一提的是，这里的定义中运算$f$并非代数运算，似乎有些文章中代数系统的定义会要求$f$满足封闭性，本文不要求，特此说明。}
+
+
+广群
+\begin{Definition}
+$$
+\text{代数系统}\left< S,* \right> ,\text{是广群，当且仅当}* \text{是代数运算}
+$$
+\end{Definition}
+
+半群
+\begin{Definition}
+$$
+\text{广群}\left< S,* \right> \text{是半群，当且仅当}*\text{满足结合律}
+$$
+\end{Definition}
+
+独异点
+\begin{Definition}
+$$
+\text{半群}\left< S,* \right> \text{是独异点（或含幺半群），当且仅当}S\text{关于}* \exists \text{幺元}
+$$
+\end{Definition}
+
+群
+\begin{Definition}
+$$
+\text{独异点}\left< G,* \right> \text{是群，当且仅当}\forall{x}\in G ,\exists x^{-1}
+$$
+\end{Definition}
+
+阿贝尔群（交换群）
+\begin{Definition}\label{base4}
+$$
+\text{群}\left< G,+ \right> \text{是阿贝尔群，当且仅当}+\text{满足交换律}
+$$
+\end{Definition}
+
+在我写完这个部分后，发现似乎\ref{daishu}的内容应该放到代数空间里更为严谨，即在定义半群的同时定义幺元，定义独异点的同时定义逆元，定义阿贝尔群的同时定义交换律，等等。但我实在不愿破坏现在从广群到阿贝尔群的定义表述的连贯性，（我称其为语文之美）。
+故不作更改，特此说明。
+
+\subsection{环和域}
+
+\textbf{环}
+\begin{Definition}
+$$
+\text{代数系统}\left< A,+,* \right> \text{是一个环，当且仅当}\left< A,+ \right> \text{是阿贝尔群，}\left< A,* \right> \text{是半群}
+$$
+且$*$对于$+$是可分配的，即$\forall x,y,z\in A$,
+$\begin{cases}
+    x*(y+z)=x*y+x*z, \\
+    (y+z)*x=y*x+z*x.
+\end{cases}
+$
+\end{Definition}
+
+\textbf{交换环}
+\begin{Definition}
+$$
+\text{环}\left< A,+,* \right> \text{是交换环，当且仅当}\left< A,* \right> \text{是可交换的}
+$$
+\end{Definition}
+
+\textbf{含幺环}
+\begin{Definition}
+$$
+\text{环}\left< A,+,* \right> \text{是含幺环，当且仅当}\left< A,* \right> \text{是独异点}
+$$
+\end{Definition}
+
+\textbf{整环}
+\begin{Definition}
+$$
+\text{环}\left< A,+,* \right> \text{是整环，当且仅当}\left< A,+,* \right> \text{是含幺交换环}
+$$
+且$\left< A,* \right>$无零因子，即$\forall x,y\in A$,$x\neq 0 , y\neq 0 \Rightarrow x*y\neq 0$
+
+\end{Definition}
+
+\textbf{域}
+\begin{Definition}
+$$
+\text{整环}\left< A,+,* \right> \text{是域，当且仅当}\left< A-\{0\},* \right>\text{是阿贝尔群}
+$$
+\end{Definition}
+
+对于环的域这一节的表述没有群那一节那么美观，我已尽力简化，但依然无法一气呵成，可能是我能力不够吧。
+
+\section{线性空间}
+
+关于线性空间和向量空间的关系需要先说明一下。在蓝以中的教材中，先是定义了向量空间，再定义线性空间，并认为线性空间包含向量空间，这当然没有问题，毕竟线性空间的元素不一定是向量。而在丘维声的教材中，有这么一句话：\textbf{借助几何语言，把线性空间的元素称为向量，线性空间又可称为向量空间}。这种说法同样没有问题，毕竟二者也确实等价。在本文中，我并没有引入向量的概念，故采用后者的说法，即认为向量空间和线性空间是一个东西的两个名称。
+
+
+\subsection{八条公理}
+
+\begin{Definition}\label{base1}
+域$\mathbb{F}$上的一个线性空间V由一个阿贝尔群V以及一个域$\mathbb{F}$在V上的数乘运算构成
+\end{Definition}
+
+\tbox{其中只用集合的符号，即单个大写字母表示群和域，特此声明。}
+
+我看到这个定义\ref{base1}是在《量子计算：一种应用方法》这本书中，作者是杰克-希德里，人民邮电出版社出版。我正是因为看了这本书，才萌生了写这篇文章的想法。用一句话便定义了线性空间，是如此的简洁优美。
+
+再看看传统的定义是多么的丑陋。
+
+\begin{Definition}
+$$
+\begin{aligned}
+&\text{ 设V 是一个非空集合,K 是一个数域.又设:} \\
+&\mathrm{(i)}\text{ 在}V\text{ 中定义了一种运算,称为加法. 即对}V\text{ 中任意两个元素} \\
+&\alpha 与 \beta,\text{都按某一法则对应于}V\text{ 内唯一确定的一个元素,记之为} \alpha+\beta; \\
+&\mathrm{(ii)}\text{ 在 K 中的数与}V\text{ 的元素间定义了一种运算},\textbf{称为数乘}.\\ 
+&\text{即} \text{对} V\text{中任意元素 }\alpha\text{ 和数域 }K\text{ 中任意数 }k,\\
+&\text{都按某一法则对应于 }V\text{ 内}  
+\text{唯一} \text{确定的一个元素,记之为 }k\alpha.  
+\end{aligned}$$
+如果加法与数乘满足下面列出的八条运算法则,那么称V 是数域K 上的一个线性空间. 
+
+加法和数乘满足下面的八条运算法则:
+$$\begin{aligned}\label{base2}
+& \text{(i)对任意 }\alpha,\beta,\gamma\in V,\alpha+(\beta+\gamma)=(\alpha+\beta)+\gamma;  \\
+&\text{(ii)对任意 }\alpha,\beta{\in}V\text{,}\alpha+\beta{=}\beta{+}\alpha; \\
+& (\text{iii)存在一个元素 }0\in V,\text{使对一切 }\alpha{\in}V,\text{有} \alpha+0=\alpha, \\
+&\text{此元素0称为V 的零元素;}  \\
+&(\text{iv)对任一 }\alpha{\in}V\text{ 都存在 }\beta{\in}V,\text{使} \alpha+\beta=0, \\
+&\beta  \text{称为}\alpha \text{的一个负元素;}  \\
+&\mathrm{(v)}\text{ 对数域中的数 }1,\text{有 }1\bullet\alpha{=}\alpha; \\
+&(\mathrm{vi})\text{ 对任意 }k,l\in K,\alpha{\in}V,\text{有} (kl)\alpha  =k\left(l\alpha\right);  \\
+&(\text{vii)对任意 }k,l\in K,\alpha\in V,\bar{\lambda} \text{有}  (k+l)\alpha  =k\alpha+l\alpha;  \\
+&(\text{viii)对任意 }k\in K,\alpha,\beta{\in}V \text{,有}  k\left(\alpha+\beta\right) =k\alpha+k\beta. 
+\end{aligned}$$
+\end{Definition}
+
+定义\ref{base2}来自于蓝以中的《高等代数》。为方便讨论，简写为下面的定理。
+
+\begin{Theorem} \label{level 1}
+    线性空间满足下列八条性质
+\begin{gather}
+    \boldsymbol{a}+\boldsymbol{b}=\boldsymbol{b}+\boldsymbol{a}
+\\
+\boldsymbol{a}+\boldsymbol{b}+\boldsymbol{c}=\left( \boldsymbol{a}+\boldsymbol{b} \right) +\boldsymbol{c}=\boldsymbol{a}+\left( \boldsymbol{b}+\boldsymbol{c} \right) 
+\\
+\boldsymbol{a}+\mathbf{0}=\boldsymbol{a}
+\\
+\boldsymbol{a}-\boldsymbol{a}=\boldsymbol{a}+\left( -\boldsymbol{a} \right) =\mathbf{0}
+\\
+1\cdot \boldsymbol{a}=\boldsymbol{a}
+\\
+\lambda \left( \mu \boldsymbol{a} \right) =\left( \lambda \mu \right) \boldsymbol{a}
+\\
+\lambda \left( \boldsymbol{a}+\boldsymbol{b} \right) =\lambda \boldsymbol{a}+\lambda \boldsymbol{b}
+\\
+\left( \lambda +\mu \right) \boldsymbol{a}=\lambda \boldsymbol{a}+\mu \boldsymbol{a}
+\end{gather}
+
+这个定理的表述是我直接从网上copy下来的。并不严格，比如压根没说
+$a,b,c,+,$
+$*,\lambda,\mu$ 是什么，但这些都是我们很熟悉的东西，非常显然，在这里省略亦无伤大雅。
+\end{Theorem}
+
+注意到定理\ref{level 1}我用了\textbf{定理}而不是\textbf{公理}。那既然是\textbf{定理}当然需要证明了。而使用定义\ref{base1}证明定理\ref{level 1}正是这篇文章的最终目的。
+
+但在开始之前还有一个东西没有定义，即域$\mathbb{F}$在V上的\textbf{数乘运算}。
+参考《量子计算》
+
+\begin{Definition}\label{base3}
+    域$\mathbb{F}$在V上的\textbf{数乘运算}$*$是映射$F\times V\rightarrow V$满足
+
+    \begin{itemize}
+        \item 分配律1：$\forall a\in F,\forall u,v \in V$有
+        $$a*(u+v)=a*u+a*v$$
+        \item 分配律2：$\forall a,b\in F,\forall v \in V$有
+        $$(a+b)*v=a*u+b*v$$
+        \item 结合律：$\forall a,b\in F,\forall v \in V$有
+        $$(ab)*v=a*(b*v)$$
+        \item 存在单位元：$\forall v \in V,\exists 1 \in F$有 
+        $$1*v=v$$
+    \end{itemize}
+\end{Definition}
+
+值得注意的是，虽然我只使用了加法$+$和数乘$*$，但上述定义一共包含了四个运算，
+展开之后很容易理解
+
+域$\mathbb{F}$在V上的\textbf{数乘运算} $\Longleftrightarrow$
+域$\left< F,+_1,\times \right>$在阿贝尔群$\left< V,+_2 \right>$上的\textbf{数乘运算}$*$.
+
+他们分别是F上的加法，F上的乘法，V上的加法，F和V上的乘法。它们对应于不同的映射，完全不同，但性质又是如此相似，并能彼此联系在一起，构成一个具有强大泛用性的系统。在我看来这正是数学美的所在。
+
+现在完事具备，只欠证明，事实上，定理\ref{level 1}已经非常显然了。
+
+\begin{proof}
+    $\because $由$\left<V,+\right>$是阿贝尔群，由定义\ref{base4}直接得到前四条性质，其中V关于$+$的逆元定义为负元。
+    
+    由数乘运算的定义\ref{base3}，直接得到后四条性质。
+\end{proof}
+
+最后，有一个非常有趣的问题
+\begin{Proposition}
+    定义\ref{base1}与定义\ref{base2}不等价。
+\end{Proposition}
+
+这个命题的表述是我自己想的，可能不正确。不过丘维声的定义就不存在这个问题
+\begin{proof}
+    因为定义\ref{base1}并没有要求域$\mathbb{F}$是数域，而定义\ref{base2}要求。所以原命题得证。
+\end{proof}
+
+至此，所有正文内容就结束了，后面是一些简单的性质和证明。也是对\ref{daishu}的补充。
+
+
+\subsection{性质}
+
+\begin{Proposition}
+    零元是唯一的
+\end{Proposition}
+
+\begin{proof}
+
+\[
+\text{设} \exists \mathbf{0}_1,\mathbf{0}_2 ,\forall x\in V,0_1+x=x,0_2+X=X
+\]
+那么
+$$0_2=0_1+0_2=0_2+0_1=0_1$$
+所以零元唯一
+\end{proof}
+
+\begin{Proposition}
+负元是唯一的
+\end{Proposition}
+
+\begin{Proposition}
+$$\forall \alpha\in V , 0*\alpha=0$$
+\end{Proposition}
+
+\begin{Proposition}
+k*0=0
+\end{Proposition}
+
+\begin{proof}
+
+\begin{align*}
+&k*0=k*(0+0)=k*0+k*0\\
+&k*0+(-k*0)=k*0+k*0+(-k*0)\\
+&0=k*0+0\\
+&0=k*0
+\end{align*}
+
+\end{proof}
+
+\begin{Proposition}
+$$k*\alpha=0\Longleftrightarrow k=0 \,\text{or}\, \alpha=0$$
+\end{Proposition}
+
+\begin{proof}
+$\Leftarrow$ 已证明
+
+$\Rightarrow$
+
+假设 $k!=0$ and $\alpha!=0$
+
+$$\exists k^{-1},k^{-1}*k=1$$
+
+then
+
+$$\alpha =1*\alpha=(k^{-1}k)\alpha=k^{-1}(k*\alpha)=0$$
+
+矛盾
+\end{proof}
+
+\begin{Proposition}
+$$(-1)*\alpha=-\alpha$$
+\end{Proposition}
+
+\begin{proof}
+$$  \begin{cases}
+       \alpha+(-1)*\alpha=(1+(-1))*\alpha=0*\alpha=0
+    \end{cases}
+$$
+
+根据负元的定义，原命题得证
+\end{proof}
+
+基变换
+
+\begin{gather*}
+\text{对}\mathbf{R}^n\text{的两个基}\\
+\mathrm{I} : \left\{ \bm{b}_1,\bm{b}_2,\cdots ,\bm{b}_n \right\} \\
+\mathrm{II} : \left\{ \bm{f}_1,\bm{f}_2,\cdots ,\bm{f}_n \right\} \\
+\text{构造两个基矩阵}\\
+\bm{B}={\mathrm{def}}\left[ 
+\begin{matrix}
+	\bm{b}_1&		\bm{b}_2&		\cdots&		\bm{b}_n\\
+\end{matrix} \right] \\
+\bm{F}={\mathrm{def}}\left[ \begin{matrix}
+	\bm{f}_1&		\bm{f}_2&		\cdots&		\bm{f}_n\\
+\end{matrix} \right] \\
+\text{称}\bm{F}^{-1}\bm{B}\text{为} \mathrm{I} \text{到} \mathrm{II} \text{的过渡矩阵，而}\bm{B}^{-1}\bm{F}\text{为} \mathrm{II} \text{到} \mathrm{I} \text{的过渡矩阵，过渡矩阵关联式}\\
+\bm{v}_{\bm{F}}=\bm{F}^{-1}\bm{Bv}_{\bm{B}}\\
+\bm{v}_{\bm{B}}=\bm{B}^{-1}\bm{Fv}_{\bm{F}}\\
+\text{称为坐标变换公式}\\
+\mathrm{II}:\left\{ \bm{f}_1,\bm{f}_2,\cdots ,\bm{f}_n \right\} \\
+\text{构造两个基矩阵}\\
+\bm{B}={\mathrm{def}}\left[ \begin{matrix}
+	\bm{b}_1&		\bm{b}_2&		\cdots&		\bm{b}_n\\
+\end{matrix} \right] \\
+\bm{F}={\mathrm{def}}\left[ \begin{matrix}
+	\bm{f}_1&		\bm{f}_2&		\cdots&		\bm{f}_n\\
+\end{matrix} \right] \\
+\text{称}\bm{F}^{-1}\bm{B}\text{为I到II的过渡矩阵，而}\bm{B}^{-1}\bm{F}\text{为II到I的过渡矩阵，过渡矩阵关联式}\\
+\bm{v}_{\bm{F}}=\bm{F}^{-1}\bm{Bv}_{\bm{B}}\\
+\bm{v}_{\bm{B}}=\bm{B}^{-1}\bm{Fv}_{\bm{F}}\\
+\text{称为坐标变换公式}
+\end{gather*}
+
+基变换放在这里非常突兀，其实我在这里只是想借此表达一个观点，那就是\textbf{矩阵是通过基变换定义的}，再之后\textbf{行列式可以通过矩阵定义}。由此就能构建高等代数的体系。
+
+\tbox{而不是像几乎所有的教材上，一上来就定义行列式}
+
+\section{后记}
+
+\subsection{关于本文}
+事实上，本文中的大部分内容并非高等代数课上学到的，它们主要来自于本人在学习《量子计算：一种应用方法》和《离散数学》时的一些思考，正巧高代期末要写期末报告，便决定以此为主题。当然，在撰写文章的时候我也参考了蓝以中和丘维声的《高等代数》教材。我发现蓝以中和丘维声都对集合论，笛卡尔积，包括群（群只有蓝以中的书中有）、环、域的概念有一些论述。但基本上都是运算法则的罗列，并没有像本文这样自底向上构建系统。当然，它们毕竟是《高等代数》而不是《抽象代数》，没必要这么“抽象”。我自然没想和他们比，而且我想几百年前肯定就有人做过我现在正在的事了。更何况丘维声也写了一本专门的《近世代数》，不过我并没有看过。不过，这个过程亦是有趣的。使用\LaTeX 书写文章和公式也颇具美感。乐亦在其中也。而且这应该是我人生中的第一篇像论文一样的文章吧，满满的成就感。
+
+\subsection{关于高代学习}
+我《高等代数》的学习充满艰辛与乐趣。沉迷于抽象的数学表达和逻辑证明，不是很喜欢机械的计算，比如高斯消元、行列式和特征值等。因为我觉得机械的计算都是可以通过计算机实现的，像matlab、mathmatica之类强大的软件，人算得好没有太大意义，再好也比不过计算机。但数学定理的证明，公理体系的建立却是非人类莫属的。（严谨一点，不得不提，计算机也能辅助证明，而且历史悠久，比如大名鼎鼎的四色问题，另外男神陶哲轩也写过一篇文章，做过一个报告，专门讲这个事）。最后将一个故事，我上个星期参加计算机学院组织的“挑战杯”程序设计算法竞赛时，遇到了一个题，就是计算一个普普通通的范德蒙行列式，很容易求出通解。
+
+\[
+\begin{vmatrix}
+1 & 1 & 1 & \cdots & 1 \\
+a_1 & a_2 & a_3 & \cdots & a_n \\
+a_1^2 & a_2^2 & a_3^2 & \cdots & a_n^2 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+a_1^{n-1} & a_2^{n-1} & a_3^{n-1} & \cdots & a_n^{n-1}
+\end{vmatrix}
+= \prod_{1 \leq i < j \leq n} (a_j - a_i)
+\]
+
+如果使用计算机直接套公式，在n太大的情况下，复杂度太高，会超时。但是如果经过一系列变形，写成一个递推的形式。再利用线段树这种高级数据结构，便能在规定的时间里计算出结果。具体算法这里不提。只想表达一个观点：
+
+\textbf{只会计算学不好数学，但不会计算更学不好数学。}
+
+\subsection{发布地址}
+你能在下面的地址找到\LaTeX 源文件。
+\begin{itemize}
+    \item GitHub: \url{https://github.com/XeriChen/advanced_algebra_final_assignment}
+    % \item Overleaf:  \url{https://www.overleaf.com/latex/}
+\end{itemize}
+
+\vspace{1cm}
+\Huge{\textbf{感谢您能看到最后。}}
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+%\reference
+
+
+
+\end{document}
